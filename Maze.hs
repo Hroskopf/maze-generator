@@ -2,7 +2,7 @@ module Maze (Cell, Graph(..), GraphList, dfsGen) where
 
 type Cell = (Int, Int)
 type GraphList = [(Cell, [Cell])]
-data Graph = Graph GraphList
+data Graph = Graph Int Int GraphList
 
 cellToInt :: Cell -> Int -> Int
 cellToInt (x, y) width = x * width + y
@@ -22,7 +22,7 @@ addEdge graph x y = addDirectedEdge (addDirectedEdge graph x y) y x
 
 
 dfsGen :: Int -> Int -> Graph
-dfsGen height width = (Graph (fst (dfs (emptyGrid height width) [] (-1, -1) (0, 0))))
+dfsGen height width = (Graph height width (fst (dfs (emptyGrid height width) [] (-1, -1) (0, 0))))
             where dfs graph visited parent v| v `elem` visited   =  (graph, visited)
                                             | parent == (-1, -1) = (foldl (\(gr, vis) n -> dfs gr (v:vis) v n) (graph, visited) (neighbours v height width))
                                             | otherwise          = (foldl (\(gr, vis) n -> dfs (addEdge gr parent v) (v:vis) v n) (graph, visited) (neighbours v height width))
