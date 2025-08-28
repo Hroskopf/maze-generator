@@ -4,12 +4,6 @@ type Cell = (Int, Int)
 type GraphList = [(Cell, [Cell])]
 data Graph = Graph Int Int GraphList
 
-cellToInt :: Cell -> Int -> Int
-cellToInt (x, y) width = x * width + y
-
-intToCell :: Int -> Int -> Cell
-intToCell idx width = (idx `div` width, idx `mod` width)
-
 neighbours :: Cell -> Int -> Int -> [Cell]
 neighbours (x, y) height width = filter (\(i, j) -> (i >= 0 && i < height && j >= 0 && j < width)) [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
 
