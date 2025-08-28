@@ -1,4 +1,4 @@
-module MazeSolver where
+module MazeSolver (shortestPath) where
 
 import Maze
 
