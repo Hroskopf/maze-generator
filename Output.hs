@@ -1,4 +1,4 @@
-module Output () where
+module Output (graphToGrid, graphToGridWithSolution, Grid, asString) where
 
 import Maze
 import MazeSolver
@@ -30,10 +30,12 @@ createGraphGrid grid (((v, (u:rest))):graph) = if x1 == x2 then
                                                               (x2, y2) = u
 
 graphToGrid :: Graph -> Grid
-graphToGrid (Graph x y gr _ _) = createGraphGrid (fullGrid x y) gr
+graphToGrid (Graph x y gr (start_x, start_y) (finish_x, finish_y)) = (setChar (setChar (createGraphGrid (fullGrid x y) gr) 0 (2 * start_y + 1) ' ') (2 * x) (2 * finish_y + 1) ' ')
 
 graphToGridWithSolution :: Graph -> Grid
-graphToGridWithSolution (Graph x y gr start finish) = addPath (createGraphGrid (fullGrid x y) gr) (shortestPath gr start finish)
+graphToGridWithSolution (Graph x y gr (start_x, start_y) (finish_x, finish_y)) = (setChar (setChar grid1 0 (2 * start_y + 1) 'X') (2 * x) (2 * finish_y + 1) 'X') where
+        g = (Graph x y gr (start_x, start_y) (finish_x, finish_y))
+        grid1 = addPath (graphToGrid g) (shortestPath gr (start_x, start_y) (finish_x, finish_y))
 
 addPath :: Grid -> [Cell] -> Grid
 addPath grid [(x, y)] = setChar grid (2 * x + 1) (2 * y + 1) 'X'
