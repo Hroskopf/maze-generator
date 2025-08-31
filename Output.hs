@@ -30,10 +30,10 @@ createGraphGrid grid (((v, (u:rest))):graph) = if x1 == x2 then
                                                               (x2, y2) = u
 
 graphToGrid :: Graph -> Grid
-graphToGrid (Graph x y gr) = createGraphGrid (fullGrid x y) gr
+graphToGrid (Graph x y gr _ _) = createGraphGrid (fullGrid x y) gr
 
 graphToGridWithSolution :: Graph -> Grid
-graphToGridWithSolution (Graph x y gr) = addPath (createGraphGrid (fullGrid x y) gr) (shortestPath gr (0, 0) (x - 1, y - 1))
+graphToGridWithSolution (Graph x y gr start finish) = addPath (createGraphGrid (fullGrid x y) gr) (shortestPath gr start finish)
 
 addPath :: Grid -> [Cell] -> Grid
 addPath grid [(x, y)] = setChar grid (2 * x + 1) (2 * y + 1) 'X'
@@ -41,6 +41,6 @@ addPath grid ((x1, y1):((x2, y2):rest)) = addPath grid1 ((x2, y2):rest)
                                                     where grid1 = setChar (if x1 == x2 then setChar grid (2 * x1 + 1) (2 * (min y1 y2) + 2) 'X' else setChar grid (2 * (min x1 x2) + 2) (2 * y1 + 1) 'X') (2 * x1 + 1) (2 * y1 + 1) 'X'
 
 instance Show Graph where
-    show (Graph height width graph) = (asString grid)
+    show (Graph height width graph _ _) = (asString grid)
                                     where grid = setChar (setChar (createGraphGrid (fullGrid height width) graph) (2 * height) 1 ' ') 0 (2 * width - 1) ' ' 
 
