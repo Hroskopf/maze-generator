@@ -12,7 +12,8 @@ main = do
     putStrLn "Enter width of the maze:"
     input <- getLine
     let width = read input :: Int
-    putStrLn $ asString (graphToGrid (dfsGen height width))
+    graph <- (dfsGen height width)
+    putStrLn $ asString (graphToGrid graph)
     putStrLn "Do you want to see the solution (y/n)?"
     input <- getLine
-    if input == "y" then putStrLn $ asString (graphToGridWithSolution (dfsGen height width)) else return ()
+    if input == "y" then putStrLn $ asString (graphToGridWithSolution graph) else return ()
