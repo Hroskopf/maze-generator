@@ -38,4 +38,8 @@ emptyGrid height width = [((x, y), []) | x <- [0.. height - 1], y <- [0.. width 
 
 chooseStartAndFinish :: GraphList -> Int -> Int -> Int -> (Cell, Cell)
 chooseStartAndFinish graph height width num = (c1, c2) where
-                (_, c1, c2) = (sort [(length (shortestPath graph (0, x) (height - 1, y)), (0, x), (height - 1, y)) | x <- [0..(width - 1)], y <- [0..(width - 1)]]) !! num
+                (_, c1, c2) = (sort shortestPaths) !! num 
+                    where cells_up = [(0, x) | x <- [0..(width - 1)]]
+                          cells_down   = [(height - 1, x) | x <- [0..(width - 1)]]
+                          shortestPaths = [(dist, x, y) | x <- cells_up, (y, dist) <- (shortestPathsLength graph x cells_down)]
+                          
