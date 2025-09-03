@@ -3,7 +3,6 @@ module Gen(dfsGen, addRandomEdges) where
 import System.Random.Shuffle (shuffleM)
 import Control.Monad (foldM)
 import Data.List (sort)
-import Debug.Trace (traceShow)
 
 
 import Maze
@@ -41,17 +40,12 @@ dfsGen height width difficulty sparsity = do
                                                 ns <- shuffleM (neighbors v height width)  
                                                 foldM(\(gr, vis) n -> dfs (if parent == (-1, -1) then gr else (addEdge gr parent v)) (v:vis) v n) (graph, visited) ns
 
-
 chooseStartAndFinish :: GraphList -> Int -> Int -> Int -> (Cell, Cell)
-chooseStartAndFinish graph height width num = (c1, c2)
-  where
-    (_, c1, c2) = (sort debuggedPaths) !! num
-    cells_up    = [(0, x) | x <- [0..(width - 1)]]
-    cells_down  = [(height - 1, x) | x <- [0..(width - 1)]]
-    shortestPaths =
-      [(dist, x, y) | x <- cells_up, (y, dist) <- (shortestPathsLength graph x cells_down)]
-    debuggedPaths = traceShow shortestPaths shortestPaths
-
+chooseStartAndFinish graph height width num = (c1, c2) where
+                (_, c1, c2) = (sort shortestPaths) !! num 
+                    where cells_up = [(0, x) | x <- [0..(width - 1)]]
+                          cells_down   = [(height - 1, x) | x <- [0..(width - 1)]]
+                          shortestPaths = [(dist, x, y) | x <- cells_up, (y, dist) <- (shortestPathsLength graph x cells_down)]
 
 addRandomEdges :: GraphList -> Int -> Int -> Int -> IO GraphList
 addRandomEdges graph height width number = do   
