@@ -22,7 +22,7 @@ shortestPathsLength graph start finishes = filterDistances (bfs graph [] [(start
                                                                     | otherwise         = bfs graph (v:visited) queue' ((v, dist):distances)
                                                                         where queue' = addNeighbors (neighbors graph v) queue (dist + 1) 
                                                                               addNeighbors [] queue _ = queue
-                                                                              addNeighbors (v:ns) queue dist = ((v, dist):(addNeighbors ns queue dist))
+                                                                              addNeighbors (v:ns) queue dist = ((addNeighbors ns queue dist) ++ [(v, dist)])
                       filterDistances :: [(Cell, Int)] -> [Cell] -> [(Cell, Int)]
                       filterDistances [] _ = []
                       filterDistances ((v, dist):rest) cells | v `elem` cells = ((v, dist):(filterDistances rest cells))
