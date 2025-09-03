@@ -1,11 +1,11 @@
-module Main where
-
 import Output
 import Maze
 import MazeSolver
 import Gen
 import Text.Read (readMaybe)
 
+-- Writes given text to a console output and reads a integer value input.
+-- If given value is not integer calls itself once again
 readInt :: String -> IO Int
 readInt text = do
     putStrLn text
@@ -19,9 +19,8 @@ readInt text = do
             let Just n = maybeN
             return n
   
-
-
-
+-- Writes given text to a console output and reads a float value in range [0, 1].
+-- If given value cannot be parsed to [0, 1] float, calls itself
 readFloat :: String -> IO Float
 readFloat text = do
     putStrLn text
@@ -39,12 +38,14 @@ readFloat text = do
                     putStrLn $ "Invalid input, please enter a number between 0 and 1" 
                     readFloat text
 
+
+-- The main function for interaction with the user
 main :: IO ()
 main = do
     height <- readInt "Enter height of the maze:"
     width  <- readInt "Enter width of the maze:"
-    difficulty <- readFloat "Enter the difficulty in [0, 1]:"
     sparsity <- readFloat "Enter the sparsity in [0, 1]:"
+    difficulty <- readFloat "Enter the difficulty in [0, 1]:"
 
     graph <- dfsGen height width difficulty sparsity
     let (Graph _ _ gr start finish) = graph

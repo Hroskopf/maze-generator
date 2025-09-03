@@ -5,44 +5,52 @@ import MazeSolver
 
 type Grid = [String]
 
+-- returns height x width grid with all the walls drawn (the graph with no edges)
 fullGrid :: Int -> Int -> Grid
 fullGrid height width = [[ if x `mod` 2 == 0 && y `mod` 2 == 0 then '.' else if x `mod` 2 == 0 then '-' else if y `mod` 2 == 0 then '|' else ' ' | y <- [0.. 2 * width]] | x <- [0.. 2 * height]]
 
+-- concates the rows of given grid to a single string so that it can be written to the output
 asString :: Grid -> String
 asString [row] = row
 asString (row:grid) = row ++ "\n" ++ (asString grid)
 
+-- changes the character on given position in the string to the given one
 setCharInString :: String -> Int -> Char -> String
 setCharInString (_:row) 0 c = (c:row)
 setCharInString (s:row) x c = (s:(setCharInString row (x - 1) c))
 
+-- changes the character on given coordinates in the grid to the given char
 setChar :: Grid -> Int -> Int -> Char -> Grid
 setChar (row:grid) 0 y c = ((setCharInString row y c):grid)
 setChar (row:grid) x y c = (row:(setChar grid (x - 1) y c))
 
-createGraphGrid :: Grid -> GraphList ->  Grid
-createGraphGrid grid [] = grid
-createGraphGrid grid ((_, []):graph) = createGraphGrid grid graph
-createGraphGrid grid (((v, (u:rest))):graph) = if x1 == x2 then 
-                                    setChar (createGraphGrid grid  ((v, rest):graph)) (2 * x1 + 1) (2 * (min y1 y2) + 2) ' ' else 
-                                    setChar (createGraphGrid grid  ((v, rest):graph)) (2 * (min x1 x2) + 2) (2 * (min y1 y2) + 1) ' '         
+-- draws given graph to the given grid
+drawGraphOnGrid :: Grid -> GraphList ->  Grid
+drawGraphOnGrid grid [] = grid
+drawGraphOnGrid grid ((_, []):graph) = drawGraphOnGrid grid graph
+drawGraphOnGrid grid (((v, (u:rest))):graph) = if x1 == x2 then 
+                                    setChar (drawGraphOnGrid grid  ((v, rest):graph)) (2 * x1 + 1) (2 * (min y1 y2) + 2) ' ' else 
+                                    setChar (drawGraphOnGrid grid  ((v, rest):graph)) (2 * (min x1 x2) + 2) (2 * (min y1 y2) + 1) ' '         
                                                         where (x1, y1) = v
                                                               (x2, y2) = u
 
-graphToGrid :: Graph -> Grid
-graphToGrid (Graph x y gr (start_x, start_y) (finish_x, finish_y)) = (setChar (setChar (createGraphGrid (fullGrid x y) gr) 0 (2 * start_y + 1) ' ') (2 * x) (2 * finish_y + 1) ' ')
-
-graphToGridWithSolution :: Graph -> Grid
-graphToGridWithSolution (Graph x y gr (start_x, start_y) (finish_x, finish_y)) = (setChar (setChar grid1 0 (2 * start_y + 1) 'X') (2 * x) (2 * finish_y + 1) 'X') where
-        g = (Graph x y gr (start_x, start_y) (finish_x, finish_y))
-        grid1 = addPath (graphToGrid g) (shortestPath gr (start_x, start_y) (finish_x, finish_y))
-
+-- draws given path (list of cells) on the given grid
 addPath :: Grid -> [Cell] -> Grid
 addPath grid [(x, y)] = setChar grid (2 * x + 1) (2 * y + 1) 'X'
 addPath grid ((x1, y1):((x2, y2):rest)) = addPath grid1 ((x2, y2):rest)
                                                     where grid1 = setChar (if x1 == x2 then setChar grid (2 * x1 + 1) (2 * (min y1 y2) + 2) 'X' else setChar grid (2 * (min x1 x2) + 2) (2 * y1 + 1) 'X') (2 * x1 + 1) (2 * y1 + 1) 'X'
 
+-- creates and returns the grid based on given graph (with no solution path)
+graphToGrid :: Graph -> Grid
+graphToGrid (Graph x y gr (start_x, start_y) (finish_x, finish_y)) = (setChar (setChar (drawGraphOnGrid (fullGrid x y) gr) 0 (2 * start_y + 1) ' ') (2 * x) (2 * finish_y + 1) ' ')
+
+-- creates a grid with given graph and a solution path drawn
+graphToGridWithSolution :: Graph -> Grid
+graphToGridWithSolution (Graph x y gr (start_x, start_y) (finish_x, finish_y)) = (setChar (setChar grid1 0 (2 * start_y + 1) 'X') (2 * x) (2 * finish_y + 1) 'X') where
+        g = (Graph x y gr (start_x, start_y) (finish_x, finish_y))
+        grid1 = addPath (graphToGrid g) (shortestPath gr (start_x, start_y) (finish_x, finish_y))
+
+-- show function for a Graph datatype
 instance Show Graph where
     show (Graph height width graph _ _) = (asString grid)
-                                    where grid = setChar (setChar (createGraphGrid (fullGrid height width) graph) (2 * height) 1 ' ') 0 (2 * width - 1) ' ' 
-
+                                    where grid = setChar (setChar (drawGraphOnGrid (fullGrid height width) graph) (2 * height) 1 ' ') 0 (2 * width - 1) ' ' 
