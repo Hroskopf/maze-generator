@@ -6,20 +6,23 @@ import MazeSolver
 import Gen
 import Text.Read (readMaybe)
 
--- Writes given text to a console output and reads a integer value input.
--- If given value is not integer calls itself once again
+-- Writes given text to a console output and reads a positive integer value input.
+-- If given value is not positive integer calls itself once again
 readInt :: String -> IO Int
 readInt text = do
     putStrLn text
     input <- getLine
     let maybeN = readMaybe input :: Maybe Int
-    if maybeN == Nothing
+    if maybeN == Nothing 
         then do
-            putStrLn "Invalid input, please enter an integer."
+            putStrLn "Invalid input, please enter an positive integer."
             readInt text
         else do
             let Just n = maybeN
-            return n
+            if n > 0 then return n
+            else do
+                putStrLn "Invalid input, please enter an positive integer."
+                readInt text
   
 -- Writes given text to a console output and reads a float value in range [0, 1].
 -- If given value cannot be parsed to [0, 1] float, calls itself
