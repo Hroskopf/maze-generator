@@ -18,7 +18,7 @@ shortestPath graph start finish = bfs graph finish [] [[start]]
                                                   addToQueue (v:rest) queue path = ((addToQueue rest queue path) ++ [(v:path)])
 
 
--- returns list of pairs (cell, distance) for given graph, starting cell and list of cells we are interesting in.
+-- returns list of pairs (cell, distance) for given graph, starting cell and list of cells we are interested in.
 shortestPathsLength :: GraphList -> Cell -> [Cell] -> [(Cell, Int)]
 shortestPathsLength graph start finishes = filterDistances (bfs graph [] [(start, 0)] []) finishes
                 where bfs _ _ [] distances = distances

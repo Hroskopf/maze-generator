@@ -9,7 +9,7 @@ type Grid = [String]
 fullGrid :: Int -> Int -> Grid
 fullGrid height width = [[ if x `mod` 2 == 0 && y `mod` 2 == 0 then '.' else if x `mod` 2 == 0 then '-' else if y `mod` 2 == 0 then '|' else ' ' | y <- [0.. 2 * width]] | x <- [0.. 2 * height]]
 
--- concates the rows of given grid to a single string so that it can be written to the output
+-- concatenates the rows of given grid to a single string so that it can be written to the output
 asString :: Grid -> String
 asString [row] = row
 asString (row:grid) = row ++ "\n" ++ (asString grid)

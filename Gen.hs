@@ -17,7 +17,7 @@ addDirectedEdge :: GraphList -> Cell -> Cell -> GraphList
 addDirectedEdge ((v, v_neigh):graph) x y| x == v     = ((v, (y:v_neigh)):graph) 
                                               | otherwise  = ((v, v_neigh):(addDirectedEdge graph x y)) 
 
--- adds undirected edge between two given vertecies in graph
+-- adds undirected edge between two given vertices in graph
 addEdge :: GraphList -> Cell -> Cell -> GraphList
 addEdge graph x y = addDirectedEdge (addDirectedEdge graph x y) y x
 
@@ -26,7 +26,7 @@ addEdges :: GraphList -> [(Cell, Cell)] -> GraphList
 addEdges g [] = g
 addEdges g ((x, y):rest) = addEdges (addEdge g x y) rest
 
--- creates a graph with height x width vertecies and no edges
+-- creates a graph with height x width vertices and no edges
 emptyGraph :: Int -> Int -> GraphList
 emptyGraph height width = [((x, y), []) | x <- [0.. height - 1], y <- [0.. width - 1]]
 
@@ -46,7 +46,7 @@ addRandomEdges graph height width number = do
                         let edgesToAdd = take number edgesShuffled
                         return (addEdges graph edgesToAdd)
 
--- Generates a full maze given heigh, width, expected sparsity and the length of the solution (difficulty)
+-- Generates a full maze given height, width, expected sparsity and the length of the solution (difficulty)
 -- The maze is generated using random DFS.
 dfsGen :: Int -> Int -> Float -> Float -> IO Graph
 dfsGen height width difficulty sparsity = do
