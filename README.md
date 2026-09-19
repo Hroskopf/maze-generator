@@ -8,9 +8,14 @@ The program takes the size (height and width) of the maze, the expected difficul
 
 Communication with the program happens through the console. To run the program, you need to run the `main` function of the `Main.hs` file.
 
-One way to do this:
+The easiest way (Linux/macOS, needs GHC and the `random-shuffle` package):
 
-Run
+```sh
+make run
+```
+
+Or build it manually:
+
 ```sh
 ghc -package random-shuffle Main.hs -o maze
 ```

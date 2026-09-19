@@ -1,0 +1,7 @@
+*.o
+*.hi
+build/
+maze
+dist-newstyle/
+.stack-work/
+.DS_Store
